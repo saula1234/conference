@@ -1,0 +1,63 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_table_user_presentations" author="kulikoff">
+
+        <createTable tableName="t_user_presentations">
+
+            <column name="users_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="users_id" references="t_user(id)"/>
+            </column>
+
+            <column name="presentations_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="pres_id_user" references="t_presentation(id)"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="2" author="kulikoff">
+        <addPrimaryKey columnNames="users_id, presentations_id"
+                       constraintName="user_presentations_primary_key"
+                       tableName="t_user_presentations"
+                       validate="true"/>
+    </changeSet>
+
+    <changeSet  id="insert_table_user_presentations" author="kulikoff"  >
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user_presentations">
+            <column  name="users_id"  value="2"/>
+            <column  name="presentations_id"  value="1"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user_presentations">
+            <column  name="users_id"  value="2"/>
+            <column  name="presentations_id"  value="2"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user_presentations">
+            <column  name="users_id"  value="3"/>
+            <column  name="presentations_id"  value="1"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user_presentations">
+            <column  name="users_id"  value="4"/>
+            <column  name="presentations_id"  value="3"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user_presentations">
+            <column  name="users_id"  value="5"/>
+            <column  name="presentations_id"  value="2"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -1,0 +1,16 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="db/changelog/create_table_presentation.xml"/>
+
+    <include file="db/changelog/create_table_room.xml"/>
+
+    <include file="db/changelog/create_table_user.xml"/>
+
+    <include file="db/changelog/create_table_schedule.xml"/>
+
+    <include file="db/changelog/create_table_user_presentations.xml"/>
+
+</databaseChangeLog>

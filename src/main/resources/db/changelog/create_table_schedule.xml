@@ -1,0 +1,47 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_table_schedule" author="kulikoff">
+
+        <createTable tableName="t_schedule">
+
+            <column name="pres_id" type="bigint">
+                <constraints primaryKey="true" nullable="false" foreignKeyName="pres_id"
+                             references="t_presentation(id)"
+                />
+            </column>
+
+            <column name="room_id" type="bigint"/>
+
+            <column name="time" type="DATETIME"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet  id="insert_table_schedule" author="kulikoff"  >
+
+        <insert  schemaName="conference_test"
+                 tableName="t_schedule">
+            <column  name="pres_id"  value="1"/>
+            <column  name="room_id"  value="2"/>
+            <column  name="time"  value="2022-02-21 12:00:00"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_schedule">
+            <column  name="pres_id"  value="2"/>
+            <column  name="room_id"  value="1"/>
+            <column  name="time"  value="2022-02-21 14:00:00"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_schedule">
+            <column  name="pres_id"  value="3"/>
+            <column  name="room_id"  value="2"/>
+            <column  name="time"  value="2022-02-21 16:00:00"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

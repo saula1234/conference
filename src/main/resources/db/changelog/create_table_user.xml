@@ -1,0 +1,94 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_table_user" author="kulikoff">
+
+        <createTable tableName="t_user">
+
+            <column name="id" type="bigint" autoIncrement="true" incrementBy="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="password" type="varchar(255)"/>
+
+            <column name="username" type="varchar(255)"/>
+
+            <column name="name" type="varchar(255)"/>
+
+            <column name="last_name" type="varchar(255)"/>
+
+            <column name="role" type="varchar(255)"/>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet  id="insert_table_users" author="kulikoff"  >
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="admin"/>
+            <column  name="name"  value="admin"/>
+            <column  name="last_name"  value="admin"/>
+            <column  name="role"  value="ROLE_ADMIN"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="speaker1"/>
+            <column  name="name"  value="speaker1"/>
+            <column  name="last_name"  value="speaker1"/>
+            <column  name="role"  value="ROLE_PRESENTER"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="speaker2"/>
+            <column  name="name"  value="speaker2"/>
+            <column  name="last_name"  value="speaker2"/>
+            <column  name="role"  value="ROLE_PRESENTER"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="speaker3"/>
+            <column  name="name"  value="speaker3"/>
+            <column  name="last_name"  value="speaker3"/>
+            <column  name="role"  value="ROLE_PRESENTER"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="speaker4"/>
+            <column  name="name"  value="speaker4"/>
+            <column  name="last_name"  value="speaker4"/>
+            <column  name="role"  value="ROLE_PRESENTER"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="listener1"/>
+            <column  name="name"  value="listener1"/>
+            <column  name="last_name"  value="listener1"/>
+            <column  name="role"  value="ROLE_USER"/>
+        </insert>
+
+        <insert  schemaName="conference_test"
+                 tableName="t_user">
+            <column  name="password"  value="$2a$10$KNp8.CKCFbHv6xiR6DxNu.k606O8w8Fvhrcj0iwPnBrG.IhWabdDG"/>
+            <column  name="username"  value="listener2"/>
+            <column  name="name"  value="listener2"/>
+            <column  name="last_name"  value="listener2"/>
+            <column  name="role"  value="ROLE_USER"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
