@@ -1,6 +1,7 @@
 package ru.kulikov.saula.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.kulikov.saula.entity.Presentation;
@@ -33,12 +34,8 @@ public class PresenterRestController {
 
     //Выдача имени залогиневшегося пользователя
     private String getCurrentUsername(){
-        String ActiveUserName = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-
-        ActiveUserName = ActiveUserName.substring(ActiveUserName.lastIndexOf("[", 79) + 10);
-        ActiveUserName =  ActiveUserName.substring(0,ActiveUserName.lastIndexOf(",", 12));
-
-        return ActiveUserName;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName();
     }
 
     private void addPresentation(Schedule schedule, User tempUser){
