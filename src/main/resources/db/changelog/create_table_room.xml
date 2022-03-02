@@ -18,17 +18,17 @@
     </changeSet>
 
     <changeSet  id="insert_table_room" author="kulikoff"  >
-        <insert  schemaName="conference_test"
+        <insert  schemaName="conference_test11"
                  tableName="t_room">
             <column  name="id"  value="1"/>
             <column  name="name"  value="first"/>
         </insert>
-        <insert  schemaName="conference_test"
+        <insert  schemaName="conference_test11"
                  tableName="t_room">
             <column  name="id"  value="2"/>
             <column  name="name"  value="second"/>
         </insert>
-        <insert  schemaName="conference_test"
+        <insert  schemaName="conference_test11"
                  tableName="t_room">
             <column  name="id"  value="3"/>
             <column  name="name"  value="third"/>

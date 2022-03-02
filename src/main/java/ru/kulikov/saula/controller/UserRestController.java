@@ -19,21 +19,12 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserRestController {
 
-
-    @Autowired
-    private PresentationService presentationService;
-
-    @Autowired
-    private RoomService roomService;
-
     @Autowired
     private ScheduleService scheduleService;
 
-
-
     //Выдача расписания с понятной пользователю информацией
 
-    @GetMapping("/") //http://localhost:8090/user/
+    @GetMapping("/schedule") //http://localhost:8090/user/schedule
     public List<ScheduleDTO> findAll() {
 
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
@@ -43,8 +34,7 @@ public class UserRestController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm");
 
         for (Schedule schedule : schedules) {
-            ScheduleDTO ss = new ScheduleDTO(presentationService.findById(schedule.getPresentationId()).getTitle()
-                    , roomService.findById(schedule.getRoomId()).getName(), dateFormat.format(schedule.getTime()));
+            ScheduleDTO ss = new ScheduleDTO(schedule.getPresentation().getTitle(), schedule.getRoom().getName(), dateFormat.format(schedule.getStartTime()), dateFormat.format(schedule.getEndTime()));
             scheduleDTOS.add(ss);
         }
 

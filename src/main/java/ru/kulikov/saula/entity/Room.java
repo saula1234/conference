@@ -1,9 +1,8 @@
 package ru.kulikov.saula.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_room")
@@ -14,6 +13,9 @@ public class Room {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "room")
+    private Set<Schedule> schedules;
 
     public Integer getId() {
         return id;

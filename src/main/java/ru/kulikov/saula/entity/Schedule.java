@@ -10,9 +10,13 @@ import java.util.Date;
 @Table(name = "t_schedule")
 public class Schedule {
 
-    @Column(name = "time")
+    @Column(name = "start_time")
     @JsonDeserialize(using = DateHandler.class)
-    private Date time;
+    private Date startTime;
+
+    @Column(name = "end_time")
+    @JsonDeserialize(using = DateHandler.class)
+    private Date endTime;
 
     @Column(name = "room_id")
     private int roomId;
@@ -21,30 +25,40 @@ public class Schedule {
     @Column(name = "pres_id")
     private int presentationId;
 
-    public Schedule() { }
+    @OneToOne
+    @JoinColumn(name = "pres_id")
+    private Presentation presentation;
 
-    public Date getTime() {
-        return time;
+    @ManyToOne
+    @JoinColumn(name="room_id", insertable = false, updatable = false)
+    private Room room;
+
+    public Room getRoom() {
+        return room;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public Presentation getPresentation() {
+        return presentation;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public Date getStartTime() {
+        return startTime;
     }
 
     public int getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int room_id) {
-        this.roomId = room_id;
-    }
-
     public int getPresentationId() {
         return presentationId;
     }
 
-    public void setPresentationId(int pres_id) {
-        this.presentationId = pres_id;
+    public void setPresentationId(int presentationId) {
+        this.presentationId = presentationId;
     }
 
 }

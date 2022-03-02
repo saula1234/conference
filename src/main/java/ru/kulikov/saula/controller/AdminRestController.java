@@ -31,14 +31,14 @@ public class AdminRestController {
     }
 
     //Добавление нового пользователя
-    @PostMapping("/users") //http://localhost:8090/admin/users
+    @PostMapping("/user") //http://localhost:8090/admin/user
     public User addUser(@RequestBody User user) {
 
         return userService.addUser(user);
     }
 
     //Удаление пользователя
-    @DeleteMapping("/users/{userId}") //http://localhost:8090/admin/users/
+    @DeleteMapping("/user/{userId}") //http://localhost:8090/admin/user/
     public String deleteUser(@PathVariable int userId) {
 
         User tempUser = userService.findById(userId);
@@ -64,6 +64,10 @@ public class AdminRestController {
 
         if (tempUser.getRole().equals("ROLE_ADMIN")){
             throw new UserUpdateException("You can not update users with admin role");
+        }
+
+        if (tempUser.getRole().equals("ROLE_PRESENTER")){
+            throw new UserUpdateException("This user is presenter already");
         }
         tempUser.setRole("ROLE_PRESENTER");
 

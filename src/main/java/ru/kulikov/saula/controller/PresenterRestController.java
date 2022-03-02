@@ -1,5 +1,6 @@
 package ru.kulikov.saula.controller;
 
+import liquibase.pro.packaged.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,6 +9,7 @@ import ru.kulikov.saula.entity.Presentation;
 import ru.kulikov.saula.entity.Room;
 import ru.kulikov.saula.entity.Schedule;
 import ru.kulikov.saula.entity.User;
+import ru.kulikov.saula.exception.ResourceNotFoundException;
 import ru.kulikov.saula.service.PresentationService;
 import ru.kulikov.saula.service.RoomService;
 import ru.kulikov.saula.service.ScheduleService;
@@ -32,10 +34,27 @@ public class PresenterRestController {
     @Autowired
     private RoomService roomService;
 
+
     //Выдача имени залогиневшегося пользователя
     private String getCurrentUsername(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
+    }
+
+    private Date plusFifeMinutes(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MINUTE, 4);
+        cal.add(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
+    private Date minusFifeMinutes(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MINUTE, -4);
+        cal.add(Calendar.SECOND, -59);
+        return cal.getTime();
     }
 
     private void addPresentation(Schedule schedule, User tempUser){
@@ -52,11 +71,9 @@ public class PresenterRestController {
         if(!check)
             throw new RuntimeException("Presentation with id " + schedule.getPresentationId() + " does not exist");
 
-        int[] timeArray = new int[]{10, 12, 14, 16, 18, 20};
         ArrayList<Room> roomList = (ArrayList<Room>) roomService.findAll();
         ArrayList<Schedule> schedules = (ArrayList<Schedule>) scheduleService.findAll();
 
-        boolean timeCheck = false;
         boolean RoomCheck = false;
         boolean ScheduleCollision = false;
 
@@ -68,20 +85,37 @@ public class PresenterRestController {
         if (!RoomCheck)
             throw new RuntimeException("Incorrect room_id value - " + schedule.getRoomId());
 
+        if(schedule.getEndTime().before(schedule.getStartTime()))
+            throw new RuntimeException("End of presentation can not be before start");
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        //По задумке презентации проходят каждые два часа каждый день с 10:00:00 до 20:00:00 на другое время нельзя ставить презентации
-        for (int i : timeArray) {
-            if ((i + ":00:00").equals(dateFormat.format(schedule.getTime()).substring(11)))
-                timeCheck = true;
-        }
+        //По задумке презентации нельзя ставить раньше 10:00:00 и позже 21:59:59
+        if (Integer.parseInt((dateFormat.format(schedule.getStartTime()).substring(11,13)))<10)
+            throw new RuntimeException("Incorrect time value - " + dateFormat.format(schedule.getStartTime()).substring(11));
+        if (Integer.parseInt((dateFormat.format(schedule.getEndTime()).substring(11,13)))>21)
+            throw new RuntimeException("Incorrect time value - " + dateFormat.format(schedule.getEndTime()).substring(11));
 
-        if (!timeCheck)
-            throw new RuntimeException("Incorrect time value - " + dateFormat.format(schedule.getTime()).substring(11));
-
-        for (Schedule sched : schedules) {
-            if ((sched.getRoomId() == schedule.getRoomId()) && (dateFormat.format(sched.getTime()).equals(dateFormat.format(schedule.getTime()))))
-                ScheduleCollision = true;
+        //Проверка не попадает ли презентация в существующий диапазон
+        for(Schedule sched : schedules){
+            if (sched.getRoomId() == schedule.getRoomId()){
+                if(schedule.getEndTime().after(minusFifeMinutes(sched.getStartTime()))&&schedule.getEndTime().before(plusFifeMinutes(sched.getStartTime())))
+                    ScheduleCollision = true;
+                if(schedule.getEndTime().after(sched.getStartTime())&&(schedule.getEndTime().before(sched.getEndTime())))
+                    ScheduleCollision = true;
+                if(schedule.getStartTime().after(minusFifeMinutes(sched.getStartTime()))&&schedule.getStartTime().before(plusFifeMinutes(sched.getStartTime())))
+                    ScheduleCollision = true;
+                if(schedule.getStartTime().after(sched.getStartTime())&&schedule.getEndTime().before(sched.getEndTime()))
+                    ScheduleCollision = true;
+                if(schedule.getEndTime().after(minusFifeMinutes(sched.getEndTime()))&&schedule.getEndTime().before(plusFifeMinutes(sched.getEndTime())))
+                    ScheduleCollision = true;
+                if(schedule.getStartTime().after(sched.getStartTime())&&schedule.getStartTime().before(sched.getEndTime()))
+                    ScheduleCollision = true;
+                if(schedule.getStartTime().after(minusFifeMinutes(sched.getEndTime()))&&schedule.getStartTime().before(plusFifeMinutes(sched.getEndTime())))
+                    ScheduleCollision = true;
+                if(schedule.getStartTime().before(sched.getStartTime())&&schedule.getEndTime().after(sched.getEndTime()))
+                    ScheduleCollision = true;
+            }
         }
 
         if (ScheduleCollision)
@@ -90,7 +124,7 @@ public class PresenterRestController {
         scheduleService.save(schedule);
     }
     //Выдача презентаций пользователя
-    @GetMapping("/") //http://localhost:8090/presenter/
+    @GetMapping("/presentations") //http://localhost:8090/presenter/presentations
     private Set<Presentation> getPresentations(){
 
         User tempUser = userService.findByUsername(getCurrentUsername());
@@ -103,6 +137,9 @@ public class PresenterRestController {
     //Добавление новой презентации
     @PostMapping("/presentation/{presentationName}") //http://localhost:8090/presenter/presentation/
     private void addNewPresentation(@PathVariable String presentationName, @RequestBody Schedule schedule){
+
+        if (presentationService.findByTitle(presentationName)!=null)
+            throw new  RuntimeException("Presentation with name: " + presentationName + " already exist");
 
         Presentation presentation = new Presentation();
 
@@ -148,7 +185,7 @@ public class PresenterRestController {
 
     //Удаление презентации у пользователя
     //Если этой презентации не осталось у других пользователей, удалить из списка презентаций
-    @DeleteMapping("/{presentationId}") //http://localhost:8090/presenter/
+    @DeleteMapping("/presentation/{presentationId}") //http://localhost:8090/presenter/presentation
     private void deletePresentation(@PathVariable int presentationId){
 
         Presentation presentation = presentationService.findById(presentationId);

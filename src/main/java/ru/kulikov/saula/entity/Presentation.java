@@ -20,7 +20,9 @@ public class Presentation {
     @ManyToMany(mappedBy = "presentations")
     private Set<User> users;
 
-    public Presentation() { }
+    @OneToOne(mappedBy = "presentation")
+    private Schedule schedule;
+
 
     public int getId() {
         return id;
@@ -28,14 +30,6 @@ public class Presentation {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 
     public String getTitle() {

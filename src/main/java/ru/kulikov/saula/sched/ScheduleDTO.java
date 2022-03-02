@@ -1,22 +1,28 @@
 package ru.kulikov.saula.sched;
 
-import java.util.Date;
-
 public class ScheduleDTO {
 
     private String presentationName;
 
     private String roomName;
 
-    private String time;
+    private String startTime;
 
-    public ScheduleDTO() {
-    }
+    private String endTime;
 
-    public ScheduleDTO(String presentationName, String roomName, String time) {
+    public ScheduleDTO(String presentationName, String roomName, String startTime, String endTime) {
         this.presentationName = presentationName;
         this.roomName = roomName;
-        this.time = time;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getPresentationName() {
@@ -35,11 +41,11 @@ public class ScheduleDTO {
         this.roomName = roomName;
     }
 
-    public String getTime() {
-        return time;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 }

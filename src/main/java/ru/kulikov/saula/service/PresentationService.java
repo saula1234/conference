@@ -35,4 +35,6 @@ public class PresentationService {
     public void deleteById(int id) {
         presentationRepository.deleteById(id);
     }
+
+    public Presentation findByTitle(String title) {return presentationRepository.findByTitle(title); }
 }
